@@ -6,7 +6,8 @@
 
 ### windows
 
-使用任务计划程序，程序为：
+将windows文件夹下的所有内容复制到本地的稳定位置$baseDir
+使用任务计划程序，创建任务，操作的程序为：
 
 ```
 wscript.exe
@@ -17,4 +18,4 @@ wscript.exe
 ```
 "$baseDir\run_host_silently.vbs"
 ```
-$baseDir更换为存放的文件夹
+可以在触发器设置执行开始时间和间隔。
