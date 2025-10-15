@@ -58,12 +58,18 @@ while (-not $success -and $attempt -lt $maxRetries) {
         if ($remoteBlock -eq $localBlock) {
             $logMsg = "[$time] No changes, no update needed"
         } else {
+            # --- 执行文件更新操作 ---
             Copy-Item -Path $hostsPath -Destination $backup -Force
             if (-not $localText) { $localText = "" }
             $updated = [regex]::Replace($localText, $pattern, "")
             $updated = "$updated`r`n$remoteBlock"
             Set-Content -Path $hostsPath -Value $updated -Encoding UTF8
-            $logMsg = "[$time] Update success (attempt $attempt)"
+            
+            #flush DNS cache
+            ipconfig /flushdns | Out-Null
+            # ----------------------------------
+            
+            $logMsg = "[$time] Update success and DNS cache flushed (attempt $attempt)"
         }
 
         $success = $true
