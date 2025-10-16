@@ -6,7 +6,7 @@
 $ErrorActionPreference = "Stop"
 
 #TODO: Change this to your desired directory
-$baseDir   = "F:\github"
+$baseDir = $PSScriptRoot
 
 $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
 $tempFile  = "$baseDir\github520_hosts.txt"
