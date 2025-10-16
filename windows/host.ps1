@@ -56,6 +56,7 @@ while (-not $success -and $attempt -lt $maxRetries) {
         # ------------------------
         $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         if ($remoteBlock -eq $localBlock) {
+            ipconfig /flushdns | Out-Null
             $logMsg = "[$time] No changes, no update needed"
         } else {
             # --- 执行文件更新操作 ---
@@ -67,7 +68,6 @@ while (-not $success -and $attempt -lt $maxRetries) {
             
             #flush DNS cache
             ipconfig /flushdns | Out-Null
-            # ----------------------------------
             
             $logMsg = "[$time] Update success and DNS cache flushed (attempt $attempt)"
         }
