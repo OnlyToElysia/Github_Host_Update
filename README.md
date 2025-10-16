@@ -6,17 +6,16 @@
 
 ### windows
 
-将windows文件夹下的所有内容复制到本地的稳定位置$baseDir
+以管理员身份运行windows文件夹下的run.bat。
 
-使用任务计划程序，创建任务，操作的程序为：
+#### 说明
 
-```
-wscript.exe
-```
+要求Win11环境，其它环境未验证。
 
-参数为：
+该脚本会使用任务计划程序创建任务。
 
-```
-"$baseDir\run_host_silently.vbs"
-```
-可以在触发器设置执行开始时间和间隔。
+日志记录在windows\data\github_hosts_update.log
+
+原host文件存到windows\data\host.bak中
+
+新添加的host文件存到windows\data\github520_hosts.txt中

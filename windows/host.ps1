@@ -5,18 +5,27 @@
 
 $ErrorActionPreference = "Stop"
 
-#TODO: Change this to your desired directory
-$baseDir = $PSScriptRoot
+# Get the directory where the script is located
+$scriptDir = $PSScriptRoot
+# The new file storage directory is the 'data' subfolder under the script directory
+$dataDir = Join-Path $scriptDir "data"
 
+# Check if the data directory exists, create it if it doesn't
+if (-not (Test-Path $dataDir)) { 
+    Write-Host "Creating data directory: $dataDir"
+    New-Item -ItemType Directory -Path $dataDir | Out-Null 
+}
+
+# Update all generated file paths to point to the new $dataDir
 $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
-$tempFile  = "$baseDir\github520_hosts.txt"
-$backup    = "$baseDir\hosts.bak"
-$logFile   = "$baseDir\github_hosts_update.log"
+$tempFile  = Join-Path $dataDir "github520_hosts.txt"
+$backup    = Join-Path $dataDir "hosts.bak"
+$logFile   = Join-Path $dataDir "github_hosts_update.log"
 $maxLogLines = 7
 $maxRetries = 3
 $retryDelay = 30
 
-if (-not (Test-Path "$baseDir")) { New-Item -ItemType Directory -Path "$baseDir" | Out-Null }
+# The script logic remains the same, but all file operations will use the new $dataDir path.
 
 $attempt = 0
 $success = $false
@@ -59,14 +68,14 @@ while (-not $success -and $attempt -lt $maxRetries) {
             ipconfig /flushdns | Out-Null
             $logMsg = "[$time] No changes, no update needed"
         } else {
-            # --- 执行文件更新操作 ---
+            # --- Execute file update operation ---
             Copy-Item -Path $hostsPath -Destination $backup -Force
             if (-not $localText) { $localText = "" }
             $updated = [regex]::Replace($localText, $pattern, "")
             $updated = "$updated`r`n$remoteBlock"
             Set-Content -Path $hostsPath -Value $updated -Encoding UTF8
             
-            #flush DNS cache
+            # Flush DNS cache
             ipconfig /flushdns | Out-Null
             
             $logMsg = "[$time] Update success and DNS cache flushed (attempt $attempt)"
